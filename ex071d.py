@@ -178,7 +178,149 @@ while True:
                     sleep(1)
                     break
     if cmd4 == '3':
-        print('ok')
+        while True:
+            if bLoan <= 0:
+                print(f'{cor["R"]}Você alcançou o limite de empréstimo {cor["cl"]}')
+                sleep(1)
+                print('=-=' * 16)
+                break
+            elif user1 > 1:
+                print(f'{cor["R"]}Para fazer um empréstimo, sua conta precisa estar vazia! {cor["cl"]}')
+                sleep(1)
+                print('=-=' * 16)
+                break
+            else:
+                print(f'{cor["In"]}   Empréstimo   {cor["cl"]}')
+                print(f'{cor["Y"]}Notas disponiveis: 50, 20 e 10 {cor["cl"]}')
+                print(f'{cor["Y"]}Você tem R${bLoan} disponível para empréstimo {cor["cl"]}')
+                emp = str(input(f'{cor["Y"]}Deseja fazer um empréstimo? [S/N]: {cor["cl"]}')).strip().upper()[0]
+                if emp == 'S':
+                    print(f'{cor["Y"]}Quanto quer sacar? {cor["cl"]}')
+                    saq = int(input(f'{cor["R"]}Valor: {cor["cl"]}'))
+                    if saq > totVal or bLoan < saq or saq < 9:
+                        print(f'{cor["G"]}Limite de empréstimo: R${bLoan} {cor["cl"]}')
+                    else:
+                        u = saq // 1 % 10
+                        d = saq // 10 % 10
+                        c = saq // 100 % 10
+                        m = saq // 1000 % 10
+                        if u != 0:
+                            print(f'{cor["R"]}Valor inválido!{cor["cl"]}')
+                            print(f'{cor["Y"]}Notas disponiveis para saque: 50, 20 e 10 {cor["cl"]}')
+                            sleep(1)
+                            print('=-=' * 16)
+                            break
+                        n50Mfim = 0
+                        n50Cfim = 0
+                        n20Dfim = 0
+                        v20fim = 0
+                        difD = 0
+                        difV = 0
+                        if m >= 1:
+                            mtot = (m * 1000) / 50
+                            if n50 >= mtot:
+                                n50Mfim = mtot  # notas que serão entregues
+                            else:
+                                print(f'{cor["R"]}Operação indisponivel! Tente um valor menor!{cor["cl"]}')
+                                break
+                        # print(f'[debug] n50Mfim {n50Mfim}')
+                        if c >= 1:
+                            ctot = (c * 100) / 50
+                            if (n50 - mtot) >= ctot:
+                                n50Cfim = ctot  # notas que serão entregues
+                            else:
+                                print(f'{cor["R"]}Operação indisponivel! Tente um valor menor!{cor["cl"]}')
+                                break
+                        # print(f'[debug] n50Cfim {n50Cfim}')
+                        if d >= 1 and d % 2 == 0:
+                            dtot = (d * 10) / 20
+                            if n20 >= dtot:
+                                n20Dfim = dtot  # notas que serão entregues
+                            else:
+                                print(f'{cor["R"]}Operação indisponivel! Tente um valor menor!{cor["cl"]}')
+                                break
+                        elif d >= 1 and d % 2 == 1:
+                            calcD = d - 1
+                            dtot = (calcD * 10) / 20
+                            difD = 1
+                            if n20 >= dtot:
+                                n20Dfim = dtot  # notas que serão entregues
+                            else:
+                                print(f'{cor["R"]}Operação indisponivel! Tente um valor menor!{cor["cl"]}')
+                                break
+                        else:
+                            print(f'{cor["R"]}Operação indisponivel! Tente outro valor!{cor["cl"]}')
+                            break
+                        # print(f'[debug] n20Dfim {n20Dfim}')
+                        totFim = (n50Mfim * 50) + (n50Cfim * 50) + (n20Dfim * 20) + difD
+                        totFalt = saq - totFim
+                        # print(f'[debug] falt {totFalt}  fim {totFim}')
+                        if totFalt % 20 == 0:
+                            v20 = totFalt / 20
+                            if (n20 - dtot) >= v20:
+                                v20fim = v20
+                            else:
+                                print(f'{cor["R"]}Operação indisponivel! Tente um valor menor!{cor["cl"]}')
+                                break
+                        if totFalt % 20 == 1:
+                            tfCalc = totFalt - 10
+                            difV = 1
+                            v20 = tfCalc / 20
+                            if (n20 - dtot) >= v20:
+                                v20fim = v20
+                            else:
+                                print(f'{cor["R"]}Operação indisponivel! Tente um valor menor!{cor["cl"]}')
+                                break
+                        cedula50 = n50Mfim + n50Cfim
+                        cedula20 = n20Dfim + v20fim
+                        cedula10 = difD + difV
+                        # print(f'[debug] n50={n50}  n20={n20} n10={n10}')
+                        sleep(1)
+                        bLoan = bLoan - saq
+                        user1 = user1 - saq
+                        totVal = totVal - saq
+                        n50 = n50 - cedula50
+                        n20 = n20 - cedula20
+                        n10 = n10 - cedula10
+                        # print(f'[debug] n50={n50}  n20={n20} n10={n10}')
+                        # print(f'[debug] user1={user1}  banco={totVal}')
+                        print(f'{cor["G"]}Contando...{cor["cl"]}')
+                        sleep(1)
+                        print(f'{cor["G"]}{int(cedula50)}x Notas de R$50{cor["cl"]}')
+                        print(f'{cor["G"]}{int(cedula20)}x Notas de R$20{cor["cl"]}')
+                        print(f'{cor["G"]}{int(cedula10)}x Notas de R$10{cor["cl"]}')
+                        print(f'{cor["G"]}Total: R${saq} {cor["cl"]}')
+                        sleep(1)
+                    back2 = str(input(f'{cor["B"]}A→ Novo empréstimo/B→ voltar {cor["cl"]}')).strip().upper()[0]
+                    if back2 == 'A':
+                        if totVal <= 10000:
+                            sleep(2)
+                            print('=-=' * 16)
+                            print(f'{cor["Y"]}Maquina indisponível para Saque {cor["cl"]}')
+                            print('Voltando ao menu principal!')
+                            sleep(2)
+                            print(' ')
+                            break
+                        else:
+                            print('Atualizando...')
+                            sleep(2)
+                            print(' ')
+                    elif back2 == 'B':
+                        break
+                    else:
+                        print('Opção inválida! Voltando ao menu principal!')
+                        sleep(1)
+                        break
+                elif emp == 'N':
+                    print(f'{cor["R"]}Cancelando empréstimo... {cor["cl"]}')
+                    sleep(1)
+                    print('=-=' * 16)
+                    break
+                else:
+                    print(f'{cor["R"]}Opção inválida! Cancelando empréstimo... {cor["cl"]}')
+                    sleep(1)
+                    print('=-=' * 16)
+                    break
     if cmd4 == 'X':
         break
 # ------END USER
